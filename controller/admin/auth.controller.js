@@ -73,3 +73,12 @@ export const registerController = async (req, res) => {
     }
   })
 }
+
+export const logoutController = (req, res) => {
+  
+  res.clearCookie("authToken");
+
+  res.json({
+    message: "Đăng xuất thành công",
+  })
+}
