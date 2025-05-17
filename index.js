@@ -1,11 +1,15 @@
 import express from "express";
-
+import 'dotenv/config';
+import { databaseConnect } from "./config/database.js";
+import adminRouter from "./router/admin/index.route.js";
 const app = express();
-const port = 8080;
+const port = process.env.PORT;
 
-app.get('/', (req, res) => {
-  res.send("hello world");
-})
+//Kết nối cơ sở dữ liệu
+databaseConnect();
+
+app.use("/api/admin", adminRouter);
+
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
