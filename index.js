@@ -5,8 +5,12 @@ import adminRouter from "./router/admin/index.route.js";
 const app = express();
 const port = process.env.PORT;
 
+
 //Kết nối cơ sở dữ liệu
 databaseConnect();
+
+//Cho phép nhận kiểu dữ liệu JSON
+app.use(express.json());
 
 app.use("/api/admin", adminRouter);
 

@@ -3,7 +3,7 @@ import {loginController, registerController} from "../../controller/admin/auth.c
 
 const router = express.Router();
 
-router.get("/login", loginController);
+router.post("/login", loginController);
 
 router.post("/register", registerController);
 

@@ -15,6 +15,7 @@ const schema = new Schema(
       type: Boolean,
       default: false
     },
+    role: String,
     deletedAt: Date,
     deletedBy: String,
     createdBy: String,
