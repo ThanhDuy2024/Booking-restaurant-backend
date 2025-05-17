@@ -1,8 +1,30 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import bcrypt from "bcryptjs";
 
-export const loginController = (req, res) => {
-  res.send("Login completed");
+export const loginController = async (req, res) => {
+  const accountAdmin = await AccountAdmin.findOne({
+    email: req.body.email,
+  })
+
+  if(!accountAdmin) {
+    res.status(404).json({
+      message: "Email không tồn tại"
+    })
+    return;
+  }
+
+  const checkPassword = bcrypt.compareSync(req.body.password, accountAdmin.password);
+
+  if(!checkPassword) {
+    res.status(404).json({
+      message: "Mật khẩu không đúng"
+    })
+    return;
+  }
+
+  res.json({
+    message: "Đăng nhập thành công"
+  })
 }
 
 export const registerController = async (req, res) => {
@@ -21,7 +43,7 @@ export const registerController = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(req.body.password, salt);
     req.body.password = hash;
-    
+
     const newAccountAdmin = new AccountAdmin(req.body);
     const accountAdmin = await newAccountAdmin.save();
     const {fullName, email} = accountAdmin;
