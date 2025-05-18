@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { databaseConnect } from "./config/database.js";
 import adminRouter from "./router/admin/index.route.js";
+
 const app = express();
 const port = process.env.PORT;
 

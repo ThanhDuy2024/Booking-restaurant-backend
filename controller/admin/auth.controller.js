@@ -39,7 +39,7 @@ export const loginController = async (req, res) => {
     maxAge: 30 * 24 * 60 * 60 * 1000,
   });
   
-  res.json({
+  res.status(200).json({
     message: "Đăng nhập thành công",
     token: authToken
   })
@@ -78,7 +78,7 @@ export const logoutController = (req, res) => {
   
   res.clearCookie("authToken");
 
-  res.json({
+  res.status(200).json({
     message: "Đăng xuất thành công",
   })
 }
