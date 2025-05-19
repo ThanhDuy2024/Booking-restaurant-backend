@@ -27,7 +27,7 @@ export const authentication = async (req, res, next) => {
       })
       return;
     }
-    req.accountAdmin = accountAdmin.role;
+    req.accountAdmin = accountAdmin;
   } else {
     res.status(401).json({
       message: "Bạn không có quyền truy cập vào chức năng này"

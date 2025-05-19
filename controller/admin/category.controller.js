@@ -1,4 +1,5 @@
 import Category from "../../models/category.model.js";
+import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
 
 export const categoryListController = async (req, res) => {
@@ -10,14 +11,34 @@ export const categoryListController = async (req, res) => {
   }).lean();
 
   for (const item of categories) {
-    if(item.createdAt) {
+    if (item.createdAt) {
       item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");
       delete item.createdAt;
     }
 
-    if(item.updatedAt) {
+    if (item.updatedAt) {
       item.updatedAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
       delete item.updatedAt;
+    }
+
+    if (item.createdBy) {
+      const accountAdmin = await AccountAdmin.findOne({
+        _id: item.createdBy
+      })
+      if (accountAdmin) {
+        item.createdByName = accountAdmin.fullName;
+        delete item.createdBy;
+      }
+    }
+
+    if (item.updatedBy) {
+      const accountAdmin = await AccountAdmin.findOne({
+        _id: item.updatedBy
+      })
+      if (accountAdmin) {
+        item.updatedByName = accountAdmin.fullName;
+        delete item.updatedBy;
+      }
     }
   }
   res.status(200).json(categories);
@@ -35,6 +56,8 @@ export const categoryCreateController = async (req, res) => {
       const count = await Category.countDocuments({}) + 1;
       req.body.position = parseInt(count);
     }
+
+    req.body.createdBy = req.accountAdmin.id
 
     const newCategory = new Category(req.body);
     await newCategory.save();
@@ -74,6 +97,8 @@ export const categoryEditController = async (req, res) => {
       })
       return;
     }
+
+    req.body.updatedBy = req.accountAdmin.id;
 
     await Category.updateOne({
       _id: category.id
