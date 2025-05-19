@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import slug from "mongoose-slug-generator";
+mongoose.plugin(slug)
 
 const { Schema } = mongoose;
 
@@ -20,6 +22,10 @@ const schema = new Schema(
     deletedBy: String,
     createdBy: String,
     updatedBy: String,
+    slug: {
+      type: String,
+      slug: "fullName"
+    }
   }, {
     timestamps: true, //updatedAt and createdAt
   }
