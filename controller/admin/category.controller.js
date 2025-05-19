@@ -1,4 +1,27 @@
 import Category from "../../models/category.model.js";
+import moment from "moment";
+
+export const categoryListController = async (req, res) => {
+  const find = {
+    deleted: false,
+  }
+  const categories = await Category.find(find).sort({
+    position: 'desc'
+  }).lean();
+
+  for (const item of categories) {
+    if(item.createdAt) {
+      item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");
+      delete item.createdAt;
+    }
+
+    if(item.updatedAt) {
+      item.updatedAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
+      delete item.updatedAt;
+    }
+  }
+  res.status(200).json(categories);
+}
 
 export const categoryCreateController = async (req, res) => {
   try {
