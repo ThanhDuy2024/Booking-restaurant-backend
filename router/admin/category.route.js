@@ -7,6 +7,7 @@ import {
         categoryListController 
       } from "../../controller/admin/category.controller.js";
 import storage from "../../helpers/cloudinaryHelper.js";
+import { categoryValidate } from "../../validate/category.validate.js";
 
 const upload = multer({
   storage: storage
@@ -14,9 +15,9 @@ const upload = multer({
 
 const router = express.Router();
 
-router.post("/create", upload.single("avatar"), categoryCreateController);
+router.post("/create", upload.single("avatar"), categoryValidate, categoryCreateController);
 
-router.patch('/edit/:id',upload.single("avatar"), categoryEditController);
+router.patch('/edit/:id',upload.single("avatar"), categoryValidate, categoryEditController);
 
 router.delete('/delete/:id', categoryDeleteController);
 
