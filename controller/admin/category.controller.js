@@ -66,3 +66,35 @@ export const categoryEditController = async (req, res) => {
     })
   }
 }
+
+export const categoryDeleteController = async (req, res) => {
+  try {
+    const category = await Category.findOne({
+      _id: req.params.id,
+      deleted: false
+    })
+
+    if (!category) {
+      res.status(404).json({
+        message: "Danh mục không tồn tại"
+      })
+      return;
+    }
+
+    await Category.updateOne({
+      _id: category.id
+    }, {
+      deleted: true,
+      deletedAt: Date.now()
+    });
+
+    res.status(200).json({
+      message: "Xóa thành công"
+    })
+
+  } catch (error) {
+    res.status(404).json({
+      message: "Danh mục không tồn tại"
+    })
+  }
+}
