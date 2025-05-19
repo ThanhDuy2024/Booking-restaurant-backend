@@ -3,10 +3,6 @@ import {loginController, registerController, logoutController} from "../../contr
 import { loginValidate } from "../../validate/auth.validate.js";
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("ok");
-})
-
 router.post("/login", loginValidate, loginController);
 
 router.post("/register", registerController);
