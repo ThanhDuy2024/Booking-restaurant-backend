@@ -5,11 +5,12 @@ import jwt from "jsonwebtoken";
 export const loginController = async (req, res) => {
   const accountAdmin = await AccountAdmin.findOne({
     email: req.body.email,
+    status: "active"
   })
 
   if (!accountAdmin) {
     res.status(404).json({
-      message: "Email không tồn tại"
+      message: "Email không tồn tại hoặc tài khoản của bạn đã bị khóa"
     })
     return;
   }
