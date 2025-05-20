@@ -24,7 +24,7 @@ export const loginController = async (req, res) => {
     return;
   }
 
-  const { fullName, email } = accountAdmin;
+  const { fullName, email, role} = accountAdmin;
 
   const authToken = jwt.sign({
     fullName,
