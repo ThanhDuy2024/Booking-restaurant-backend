@@ -3,6 +3,12 @@ import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
 
 export const categoryListController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào chức năng này"
+    })
+    return;
+  }
   const find = {
     deleted: false,
   }
@@ -45,6 +51,12 @@ export const categoryListController = async (req, res) => {
 }
 
 export const categoryCreateController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào chức năng này"
+    })
+    return;
+  }
   try {
     if (req.file) {
       req.body.avatar = req.file.path;
@@ -73,6 +85,12 @@ export const categoryCreateController = async (req, res) => {
 }
 
 export const categoryEditController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào chức năng này"
+    })
+    return;
+  }
   try {
     if (req.file) {
       req.body.avatar = req.file.path;
@@ -116,6 +134,12 @@ export const categoryEditController = async (req, res) => {
 }
 
 export const categoryDeleteController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào chức năng này"
+    })
+    return;
+  }
   try {
     const category = await Category.findOne({
       _id: req.params.id,

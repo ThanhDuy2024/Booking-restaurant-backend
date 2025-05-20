@@ -2,7 +2,14 @@ import { Food } from "../../models/food.model.js";
 import Category from "../../models/category.model.js";
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
+
 export const foodListController = async (req, res) => {
+	if (req.accountAdmin.role != "admin") {
+		res.status(401).json({
+			message: "Bạn không có quyền truy cập vào chức năng này"
+		})
+		return;
+	}
 	const find = {
 		deleted: false,
 	}
@@ -46,11 +53,11 @@ export const foodListController = async (req, res) => {
 			}
 		}
 
-		if(item.createdAt) {
+		if (item.createdAt) {
 			item.createdAtFormat = moment(item.createdAt).format("HH:mm - DD/MM/YYYY");
 		}
 
-		if(item.updatedAt) {
+		if (item.updatedAt) {
 			item.updatedAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
 		}
 	}
@@ -59,6 +66,12 @@ export const foodListController = async (req, res) => {
 }
 
 export const foodCreateController = async (req, res) => {
+	if (req.accountAdmin.role != "admin") {
+		res.status(401).json({
+			message: "Bạn không có quyền truy cập vào chức năng này"
+		})
+		return;
+	}
 	try {
 		if (req.file) {
 			req.body.avatar = req.file.path;
@@ -91,6 +104,12 @@ export const foodCreateController = async (req, res) => {
 }
 
 export const foodEditController = async (req, res) => {
+	if (req.accountAdmin.role != "admin") {
+		res.status(401).json({
+			message: "Bạn không có quyền truy cập vào chức năng này"
+		})
+		return;
+	}
 	try {
 		const findFood = await Food.findOne({
 			_id: req.params.id,
@@ -136,6 +155,12 @@ export const foodEditController = async (req, res) => {
 }
 
 export const foodDeleteController = async (req, res) => {
+	if (req.accountAdmin.role != "admin") {
+		res.status(401).json({
+			message: "Bạn không có quyền truy cập vào chức năng này"
+		})
+		return;
+	}
 	try {
 
 		const findFood = await Food.findOne({
