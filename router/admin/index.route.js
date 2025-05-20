@@ -9,6 +9,6 @@ router.use("/auth", authRouter);
 
 router.use('/category',authentication, categoryRouter);
 
-router.use('/food/', authentication, foodRouter);
+router.use('/food', authentication, foodRouter);
 
 export default router;

@@ -42,6 +42,7 @@ export const foodEditController = async (req, res) => {
 			res.status(400).json({
 				message: "Món ăn không tồn tại"
 			})
+			return;
 		}
 
 		if (req.file) {
@@ -71,6 +72,41 @@ export const foodEditController = async (req, res) => {
 	} catch (error) {
 		res.status(400).json({
 			message: "Chỉnh sửa không thành công"
+		})
+	}
+}
+
+export const foodDeleteController = async (req, res) => {
+	try {
+
+		const findFood = await Food.findOne({
+			_id: req.params.id,
+			deleted: false
+		})
+
+		if (!findFood) {
+			res.status(400).json({
+				message: "Món ăn không tồn tại"
+			})
+			return;
+		}
+
+		
+
+		await Food.updateOne({
+			_id: findFood.id,
+		}, {
+			deleted: true,
+			deletedAt: Date.now(),
+			deletedBy: req.accountAdmin.id
+		})
+
+		res.status(200).json({
+			message: "Xóa món ăn thành công"
+		})
+	} catch (error) {
+		res.status(400).json({
+			message: "Xóa món ăn không thành công"
 		})
 	}
 }
