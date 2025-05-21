@@ -66,7 +66,6 @@ export const accountStaffCreateController = async (req, res) => {
     res.status(400).json({
       message: "email đã tồn tại"
     })
-    console.log(findEmail);
     return;
   }
 
