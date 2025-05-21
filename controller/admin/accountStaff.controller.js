@@ -1,5 +1,54 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import bcrypt from "bcryptjs";
+import moment from "moment";
+
+export const accountStaffListController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền dùng chức năng này"
+    })
+    return;
+  }
+
+  const find = {
+    _id: { $ne: req.accountAdmin.id },
+    deleted: false,
+  }
+
+  const accountAdmin = await AccountAdmin.find(find, { password: 0 }).sort({
+    createdAt: "desc"
+  }).lean();
+
+  for (const item of accountAdmin) {
+    if(item.createdAt) {
+      item.createdAtFormat = moment(item.createdAt).format("DD/MM/YYYY");
+    }
+
+    if(item.updatedAt) {
+      item.updatedAtFormat = moment(item.updatedAt).format("DD/MM/YYYY");
+    }
+
+    if(item.createdBy) {
+      const account = await AccountAdmin.findOne({
+        _id: item.createdBy
+      })
+      if(account) {
+        item.createdByName = account.fullName
+      }
+    }
+
+    if(item.updatedBy) {
+      const account = await AccountAdmin.findOne({
+        _id: item.updatedBy
+      })
+      if(account) {
+        item.updatedByName = account.fullName
+      }
+    }
+  }
+
+  res.status(200).json(accountAdmin);
+}
 
 export const accountStaffCreateController = async (req, res) => {
   if (req.accountAdmin.role != "admin") {
