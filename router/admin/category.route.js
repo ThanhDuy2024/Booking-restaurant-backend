@@ -17,7 +17,7 @@ const router = express.Router();
 
 router.post("/create", upload.single("avatar"), categoryValidate, categoryCreateController);
 
-router.patch('/edit/:id',upload.single("avatar"), categoryValidate, categoryEditController);
+router.patch('/edit/:id', upload.single("avatar"), categoryValidate, categoryEditController);
 
 router.delete('/delete/:id', categoryDeleteController);
 

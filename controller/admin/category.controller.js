@@ -14,7 +14,7 @@ export const categoryListController = async (req, res) => {
   }
   const categories = await Category.find(find).sort({
     position: 'desc'
-  }).lean();
+  }).limit(6).lean();
 
   for (const item of categories) {
     if (item.createdAt) {

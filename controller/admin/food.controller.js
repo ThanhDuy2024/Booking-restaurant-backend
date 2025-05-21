@@ -15,7 +15,7 @@ export const foodListController = async (req, res) => {
 	}
 	const food = await Food.find(find).sort({
 		position: "desc"
-	}).lean();
+	}).limit(6).lean();
 
 	for (const item of food) {
 		if (item.categoryId) {
