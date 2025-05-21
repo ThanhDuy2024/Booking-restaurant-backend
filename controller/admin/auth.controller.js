@@ -24,7 +24,7 @@ export const loginController = async (req, res) => {
     return;
   }
 
-  const { fullName, email} = accountAdmin;
+  const { fullName, email, role} = accountAdmin;
 
   const authToken = jwt.sign({
     fullName,
@@ -42,7 +42,7 @@ export const loginController = async (req, res) => {
   
   res.status(200).json({
     message: "Đăng nhập thành công",
-    token: authToken
+    role: role
   })
 }
 

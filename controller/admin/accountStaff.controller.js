@@ -20,28 +20,28 @@ export const accountStaffListController = async (req, res) => {
   }).lean();
 
   for (const item of accountAdmin) {
-    if(item.createdAt) {
+    if (item.createdAt) {
       item.createdAtFormat = moment(item.createdAt).format("DD/MM/YYYY");
     }
 
-    if(item.updatedAt) {
+    if (item.updatedAt) {
       item.updatedAtFormat = moment(item.updatedAt).format("DD/MM/YYYY");
     }
 
-    if(item.createdBy) {
+    if (item.createdBy) {
       const account = await AccountAdmin.findOne({
         _id: item.createdBy
       })
-      if(account) {
+      if (account) {
         item.createdByName = account.fullName
       }
     }
 
-    if(item.updatedBy) {
+    if (item.updatedBy) {
       const account = await AccountAdmin.findOne({
         _id: item.updatedBy
       })
-      if(account) {
+      if (account) {
         item.updatedByName = account.fullName
       }
     }
@@ -113,12 +113,12 @@ export const accountStaffEditController = async (req, res) => {
       return;
     }
 
-    if(account.email != req.body.email) {
+    if (account.email != req.body.email) {
       const emailAllAccount = await AccountAdmin.findOne({
         email: req.body.email,
       })
 
-      if(emailAllAccount) {
+      if (emailAllAccount) {
         res.status(400).json({
           message: "Email bạn muốn cập nhận đã tồn tại trong hệ thống"
         })
@@ -126,7 +126,7 @@ export const accountStaffEditController = async (req, res) => {
       }
     }
 
-    if(req.body.password) {
+    if (req.body.password) {
       const salt = bcrypt.genSaltSync(10);
       const hash = bcrypt.hashSync(req.body.password, salt);
       req.body.password = hash;
@@ -134,7 +134,7 @@ export const accountStaffEditController = async (req, res) => {
       delete req.body.password
     }
 
-    if(req.file) {
+    if (req.file) {
       req.body.avatar = req.file.path;
     } else {
       delete req.body.avatar;
@@ -153,6 +153,46 @@ export const accountStaffEditController = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       message: "Tài khoản không tồn tại"
+    })
+  }
+}
+
+export const accountStaffDeleteController = async (req, res) => {
+  if (req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền dùng chức năng này"
+    })
+    return;
+  }
+
+  try {
+    const id = req.params.id;
+    const account = await AccountAdmin.findOne({
+      _id: id,
+      deleted: false
+    })
+
+    if (!account) {
+      res.status(400).json({
+        message: "Xóa tài khoản thất bại thành công"
+      })
+      return;
+    } 
+
+    await AccountAdmin.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deletedAt: Date.now(),
+      deletedBy: req.accountAdmin.id
+    })
+
+    res.status(200).json({
+      message: "Xóa tài khoản thành công"
+    })
+  } catch (error) {
+    res.status(400).json({
+      message: "Xóa tài khoản thất bại thành công"
     })
   }
 }
