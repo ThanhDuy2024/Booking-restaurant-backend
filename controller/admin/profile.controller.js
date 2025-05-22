@@ -1,6 +1,6 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
 export const profileGetController = async (req, res) => {
-  if(req.accountAdmin.role != "admin" && req.accountAdmin.role != "staff") {
+  if (req.accountAdmin.role != "admin" && req.accountAdmin.role != "staff") {
     res.status(401).json({
       message: "Bạn không có quyền truy cập vào trước năng này"
     })
@@ -9,9 +9,55 @@ export const profileGetController = async (req, res) => {
 
   const account = await AccountAdmin.findOne({
     _id: req.accountAdmin.id,
-    deleted: false
+    deleted: false,
+    status: "active"
   }, { password: 0 });
 
 
-  res.status(200).json(account)
+  res.status(200).json(account);
+}
+
+export const profileEditController = async (req, res) => {
+  if (req.accountAdmin.role != "admin" && req.accountAdmin.role != "staff") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào trước năng này"
+    })
+    return;
+  }
+
+  try {
+    if(req.accountAdmin.email != req.body.email) {
+      const account = await AccountAdmin.findOne({
+        email: req.body.email,
+      })
+      if(account) {
+        res.status(400).json({
+          message: "Email bạn muốn cập nhật đã tồn tại"
+        })
+        return;
+      }
+    }
+
+    if(!req.body.password) {
+      delete req.body.password;
+    }
+
+    if(req.file) {
+      req.body.avatar = req.file.path;
+    } else {
+      delete req.body.avatar;
+    }
+
+    await AccountAdmin.updateOne({
+      _id: req.accountAdmin.id,
+    }, req.body);
+
+    res.status(200).json({
+      message: "Chỉnh sửa thông tin cá nhân thành công"
+    })
+  } catch (error) {
+    res.status(400).json({
+      message: "Chỉnh sửa thông tin cá nhân thất bại"
+    })
+  }
 }
