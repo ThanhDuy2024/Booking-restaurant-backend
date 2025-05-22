@@ -10,6 +10,17 @@ export const branchCreateController = async (req, res) => {
   }
   try {
 
+    const branch = await Branch.findOne({
+      email: req.body.email
+    })
+
+    if(branch) {
+      res.status(400).json({
+        message: "Email đã tồn tại"
+      })
+      return;
+    }
+
     if(req.file) {
       req.body.avatar = req.file.path;
     } else {
@@ -53,6 +64,22 @@ export const branchEditController = async (req, res) => {
       })
       return;
     }
+
+    if(req.body.email != branch.email) {
+      const findNewEmail = await Branch.findOne({
+        _id: { $ne: branch.id },
+        email: req.body.email
+      })
+      
+      if(findNewEmail) {
+        res.status(404).json({
+          message: "Email đã tồn tại",
+        })
+        return;
+    }
+    }
+
+
 
     if(req.file) {
       req.body.avatar = req.file.path;
