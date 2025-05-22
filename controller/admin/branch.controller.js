@@ -1,4 +1,6 @@
+import AccountAdmin from "../../models/accountAdmin.model.js";
 import { Branch } from "../../models/branch.model.js";
+import moment from "moment";
 export const branchCreateController = async (req, res) => {
   if(req.accountAdmin.role != "admin") {
     res.status(401).json({
@@ -58,10 +60,12 @@ export const branchEditController = async (req, res) => {
       delete req.body.avatar;
     }
 
+    req.body.updatedBy = req.accountAdmin.id;
+
     await Branch.updateOne({
       _id: branch.id
     }, req.body);
-    
+
     res.status(200).json({
       message: "Cập nhật thông tin chi nhánh thành công",
     })
@@ -69,6 +73,55 @@ export const branchEditController = async (req, res) => {
   } catch (error) {
     res.status(400).json({
       message: "Cập nhật thông tin chi nhánh thất bại",
+    })
+  }
+}
+
+export const branchListController = async (req, res) => {
+  if(req.accountAdmin.role != "admin") {
+    res.status(401).json({
+      message: "Bạn không có quyền truy cập vào trức năng này"
+    })
+    return;
+  }
+
+  try {
+    const find = {
+      deleted: false
+    }
+
+    const branch = await Branch.find(find).sort({
+      createdAt: "desc"
+    }).lean();
+
+    for (const item of branch) {
+      if(item.updatedAt) {
+        item.createdAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
+      }
+
+      if(item.updatedAt) {
+        item.updatedAtFormat = moment(item.updatedAt).format("HH:mm - DD/MM/YYYY");
+      }
+
+      if(item.updatedBy) {
+        const account = await AccountAdmin.findOne({
+          _id: item.updatedBy,
+        })
+        item.updatedByName = account.fullName;
+      }
+
+      if(item.createdBy) {
+        const account = await AccountAdmin.findOne({
+          _id: item.createdBy,
+        })
+        item.createdByName = account.fullName;
+      }
+    }
+    res.status(200).json(branch);
+
+  } catch (error) {
+    res.status(400).json({
+      message: "Lấy dữ liệu không thành công"
     })
   }
 }

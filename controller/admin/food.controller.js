@@ -29,10 +29,6 @@ export const foodListController = async (req, res) => {
 			}
 		}
 
-		if (item.price) {
-			item.priceFormat = item.price.toLocaleString("vi-vn");
-		}
-
 		if (item.createdBy) {
 			const findAccount = await AccountAdmin.findOne({
 				_id: item.createdBy
