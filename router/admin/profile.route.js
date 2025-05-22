@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { profileGetController, profileEditController } from "../../controller/admin/profile.controller.js";
+import { accountValidateEditForm } from "../../validate/account.validate.js";
 import storage from "../../helpers/cloudinaryHelper.js";
 
 const upload = multer({
@@ -11,6 +12,6 @@ const router = express.Router();
 
 router.get('/me', profileGetController);
 
-router.post('/me', upload.single("avatar"), profileEditController);
+router.post('/me', upload.single("avatar"), accountValidateEditForm, profileEditController);
 
 export default router;
