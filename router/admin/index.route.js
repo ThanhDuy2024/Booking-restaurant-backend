@@ -4,6 +4,7 @@ import categoryRouter from "./category.route.js";
 import foodRouter from "./food.route.js";
 import accountStaffRouter from "./accountStaff.route.js";
 import profileRouter from "./profile.route.js";
+import branchRouter from "./branch.route.js";
 import { authentication  } from "../../middleware/auth.middleware.js";
 const router = express.Router();
 
@@ -16,5 +17,7 @@ router.use('/food', authentication, foodRouter);
 router.use('/account-staff', authentication, accountStaffRouter);
 
 router.use('/profile', authentication, profileRouter);
+
+router.use('/branch', authentication, branchRouter);
 
 export default router;

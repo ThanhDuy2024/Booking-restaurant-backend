@@ -47,6 +47,8 @@ export const profileEditController = async (req, res) => {
     } else {
       delete req.body.avatar;
     }
+    
+    req.body.updatedBy = req.accountAdmin.id;
 
     await AccountAdmin.updateOne({
       _id: req.accountAdmin.id,
