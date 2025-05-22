@@ -147,7 +147,6 @@ export const accountStaffEditController = async (req, res) => {
 
     res.status(200).json({
       message: "Chỉnh sửa thành công",
-      data: req.body
     })
   } catch (error) {
     res.status(404).json({
