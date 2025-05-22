@@ -11,7 +11,7 @@ const upload = multer({
 
 router.post('/create', upload.single("avatar"), branchValidate, branchCreateController);
 
-router.post('/edit/:id', upload.single("avatar"), branchValidate, branchEditController);
+router.patch('/edit/:id', upload.single("avatar"), branchValidate, branchEditController);
 
 router.get('/list', branchListController);
 

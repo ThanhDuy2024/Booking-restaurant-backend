@@ -12,6 +12,6 @@ const router = express.Router();
 
 router.get('/me', profileGetController);
 
-router.post('/me', upload.single("avatar"), accountValidateEditForm, profileEditController);
+router.patch('/me', upload.single("avatar"), accountValidateEditForm, profileEditController);
 
 export default router;
