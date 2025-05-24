@@ -1,6 +1,8 @@
 import Category from "../../models/category.model.js";
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
+import slugify from "slugify";
+import { slugGenerate } from "../../helpers/slugGenerate.js";
 
 export const categoryListController = async (req, res) => {
   if (req.accountAdmin.role != "admin") {
@@ -8,6 +10,14 @@ export const categoryListController = async (req, res) => {
       message: "Bạn không có quyền truy cập vào chức năng này"
     })
     return;
+  }
+  const search = req.query.search;
+  
+  if(search) {
+    const slugVerify = slugify(search, {
+      lower: true,
+    });
+    console.log(slugVerify);
   }
   const find = {
     deleted: false,
@@ -113,6 +123,12 @@ export const categoryEditController = async (req, res) => {
       })
       return;
     }
+
+    if(category.name != req.body.name) {
+      req.body.slug = await slugGenerate(Category, req.body.name);
+    }
+
+
 
     req.body.updatedBy = req.accountAdmin.id;
 

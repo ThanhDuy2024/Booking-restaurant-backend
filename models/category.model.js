@@ -19,7 +19,8 @@ const schema = new Schema({
   createdBy: String,
   slug: {
       type: String,
-      slug: "name"
+      slug: "name",
+      unique: true
     }
 },{ timestamps: true }
 )

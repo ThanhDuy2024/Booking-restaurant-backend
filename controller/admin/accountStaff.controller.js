@@ -179,6 +179,10 @@ export const accountStaffEditController = async (req, res) => {
 
     req.body.updatedBy = req.accountAdmin.id;
 
+    if(account.fullName != req.body.fullName) {
+      req.body.slug = await slugGenerate(AccountAdmin, req.body.name);
+    }
+
     await AccountAdmin.updateOne({
       _id: account.id
     }, req.body);

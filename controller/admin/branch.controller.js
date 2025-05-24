@@ -89,6 +89,10 @@ export const branchEditController = async (req, res) => {
 
     req.body.updatedBy = req.accountAdmin.id;
 
+    if(branch.name != req.body.name) {
+      req.body.slug = await slugGenerate(Branch, req.body.name);
+    }
+
     await Branch.updateOne({
       _id: branch.id
     }, req.body);

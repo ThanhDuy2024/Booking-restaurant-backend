@@ -60,6 +60,10 @@ export const profileEditController = async (req, res) => {
     }
     
     req.body.updatedBy = req.accountAdmin.id;
+    
+    if(req.accountAdmin.fullName != req.body.fullName) {
+      req.body.slug = await slugGenerate(AccountAdmin, req.body.name);
+    }
 
     await AccountAdmin.updateOne({
       _id: req.accountAdmin.id,

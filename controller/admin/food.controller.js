@@ -136,6 +136,10 @@ export const foodEditController = async (req, res) => {
 
 		req.body.updatedBy = req.accountAdmin.id;
 
+		if(findFood.name != req.body.name) {
+			req.body.slug = await slugGenerate(Food, req.body.name);
+		}
+
 		await Food.updateOne({
 			_id: findFood.id
 		}, req.body);
