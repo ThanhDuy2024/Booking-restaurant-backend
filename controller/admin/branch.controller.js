@@ -185,3 +185,35 @@ export const branchListController = async (req, res) => {
     })
   }
 }
+
+export const branchDeleteController = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const branch = await Branch.findOne({
+      _id: id,
+      status: "active",
+      deleted: false
+    })
+
+    if (!branch) {
+      res.status(400).json({
+        message: "Không tìm thấy chi nhánh"
+      })
+      return;
+    }
+
+    await Branch.updateOne({
+      _id: branch.id
+    }, {
+      deleted: true,
+      deletedAt: Date.now(),
+      deletedBy: req.accountAdmin.id,
+    })
+    res.status(200).json({
+      message: "Xóa chi nhánh thành công"
+    })
+  } catch (error) {
+
+  }
+}
