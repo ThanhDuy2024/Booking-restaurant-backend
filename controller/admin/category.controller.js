@@ -11,20 +11,32 @@ export const categoryListController = async (req, res) => {
     })
     return;
   }
-  const search = req.query.search;
-  
-  if(search) {
-    const slugVerify = slugify(search, {
-      lower: true,
-    });
-    console.log(slugVerify);
-  }
+
   const find = {
     deleted: false,
   }
+
+  //Tinh nang tim kiem
+  const search = req.query.search;
+  if (search) {
+    const slugVerify = slugify(search, {
+      lower: true,
+    })
+    const regex = new RegExp(slugVerify);
+    find.slug = regex;
+  }
+  //Ket thuc tinh nang tiem kiem
+
   const categories = await Category.find(find).sort({
     position: 'desc'
   }).limit(6).lean();
+
+  if (categories.length == 0) {
+    res.status(404).json({
+      message: "Không tìm thấy danh mục bạn đang tìm kiếm"
+    })
+    return;
+  }
 
   for (const item of categories) {
     if (item.createdAt) {
@@ -124,7 +136,7 @@ export const categoryEditController = async (req, res) => {
       return;
     }
 
-    if(category.name != req.body.name) {
+    if (category.name != req.body.name) {
       req.body.slug = await slugGenerate(Category, req.body.name);
     }
 

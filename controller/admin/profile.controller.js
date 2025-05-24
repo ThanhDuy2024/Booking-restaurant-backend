@@ -1,6 +1,6 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import { Branch } from "../../models/branch.model.js";
-
+import { slugGenerate } from "../../helpers/slugGenerate.js";
 export const profileGetController = async (req, res) => {
   if (req.accountAdmin.role != "admin" && req.accountAdmin.role != "staff") {
     res.status(401).json({

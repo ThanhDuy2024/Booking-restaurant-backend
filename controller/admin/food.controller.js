@@ -2,6 +2,8 @@ import { Food } from "../../models/food.model.js";
 import Category from "../../models/category.model.js";
 import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
+import slugify from "slugify";
+import { slugGenerate } from "../../helpers/slugGenerate.js";
 
 export const foodListController = async (req, res) => {
 	if (req.accountAdmin.role != "admin") {
@@ -13,9 +15,28 @@ export const foodListController = async (req, res) => {
 	const find = {
 		deleted: false,
 	}
+
+	//Tinh nang tim kiem
+	const search = req.query.search;
+	if (search) {
+		const slugVerify = slugify(search, {
+			lower: true,
+		})
+		const regex = new RegExp(slugVerify);
+		find.slug = regex;
+	}
+	//Ket thuc tinh nang tiem kiem
+
 	const food = await Food.find(find).sort({
 		position: "desc"
 	}).limit(6).lean();
+
+	if (food.length == 0) {
+    res.status(404).json({
+      message: "Không tìm thấy món ăn bạn đang tìm kiếm"
+    })
+    return;
+  }
 
 	for (const item of food) {
 		if (item.categoryId) {
@@ -136,7 +157,7 @@ export const foodEditController = async (req, res) => {
 
 		req.body.updatedBy = req.accountAdmin.id;
 
-		if(findFood.name != req.body.name) {
+		if (findFood.name != req.body.name) {
 			req.body.slug = await slugGenerate(Food, req.body.name);
 		}
 

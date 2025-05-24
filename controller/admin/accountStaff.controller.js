@@ -2,7 +2,8 @@ import AccountAdmin from "../../models/accountAdmin.model.js";
 import { Branch } from "../../models/branch.model.js";
 import bcrypt from "bcryptjs";
 import moment from "moment";
-
+import { slugGenerate } from "../../helpers/slugGenerate.js";
+import slugify from "slugify";
 export const accountStaffListController = async (req, res) => {
   if (req.accountAdmin.role != "admin") {
     res.status(401).json({
@@ -16,9 +17,27 @@ export const accountStaffListController = async (req, res) => {
     deleted: false,
   }
 
+  //Tinh nang tim kiem
+  const search = req.query.search;
+  if (search) {
+    const slugVerify = slugify(search, {
+      lower: true,
+    })
+    const regex = new RegExp(slugVerify);
+    find.slug = regex;
+  }
+  //Ket thuc tinh nang tiem kiem
+
   const accountAdmin = await AccountAdmin.find(find, { password: 0 }).sort({
     createdAt: "desc"
   }).lean();
+
+  if (accountAdmin.length == 0) {
+    res.status(404).json({
+      message: "Không tìm thấy tài khoản bạn đang tìm kiếm"
+    })
+    return;
+  }
 
   for (const item of accountAdmin) {
     if (item.createdAt) {
@@ -47,13 +66,13 @@ export const accountStaffListController = async (req, res) => {
       }
     }
 
-    if(item.branch) {
+    if (item.branch) {
       const branch = await Branch.findOne({
         _id: item.branch,
         status: "active",
         deleted: false
       })
-      if(branch) {
+      if (branch) {
         item.branchName = branch.name;
       }
     }
@@ -87,7 +106,7 @@ export const accountStaffCreateController = async (req, res) => {
     status: "active"
   })
 
-  if(!branch) {
+  if (!branch) {
     res.status(200).json({
       message: "Không tìm thấy chi nhánh"
     })
@@ -156,7 +175,7 @@ export const accountStaffEditController = async (req, res) => {
       status: "active"
     })
 
-    if(!branch) {
+    if (!branch) {
       res.status(200).json({
         message: "Không tìm thấy chi nhánh"
       })
@@ -179,8 +198,9 @@ export const accountStaffEditController = async (req, res) => {
 
     req.body.updatedBy = req.accountAdmin.id;
 
-    if(account.fullName != req.body.fullName) {
-      req.body.slug = await slugGenerate(AccountAdmin, req.body.name);
+    if (account.fullName != req.body.fullName) {
+      req.body.slug = await slugGenerate(AccountAdmin, req.body.fullName);
+      console.log(req.body.fullName);
     }
 
     await AccountAdmin.updateOne({
@@ -217,7 +237,7 @@ export const accountStaffDeleteController = async (req, res) => {
         message: "Xóa tài khoản thất bại thành công"
       })
       return;
-    } 
+    }
 
     await AccountAdmin.updateOne({
       _id: id
