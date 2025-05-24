@@ -1,4 +1,5 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
+import { Branch } from "../../models/branch.model.js";
 import bcrypt from "bcryptjs";
 import moment from "moment";
 
@@ -45,6 +46,17 @@ export const accountStaffListController = async (req, res) => {
         item.updatedByName = account.fullName
       }
     }
+
+    if(item.branch) {
+      const branch = await Branch.findOne({
+        _id: item.branch,
+        status: "active",
+        deleted: false
+      })
+      if(branch) {
+        item.branchName = branch.name;
+      }
+    }
   }
 
   res.status(200).json(accountAdmin);
@@ -65,6 +77,19 @@ export const accountStaffCreateController = async (req, res) => {
   if (findEmail) {
     res.status(400).json({
       message: "email đã tồn tại"
+    })
+    return;
+  }
+
+  const branch = await Branch.findOne({
+    _id: req.body.branch,
+    deleted: false,
+    status: "active"
+  })
+
+  if(!branch) {
+    res.status(200).json({
+      message: "Không tìm thấy chi nhánh"
     })
     return;
   }
@@ -123,6 +148,19 @@ export const accountStaffEditController = async (req, res) => {
         })
         return;
       }
+    }
+
+    const branch = await Branch.findOne({
+      _id: req.body.branch,
+      deleted: false,
+      status: "active"
+    })
+
+    if(!branch) {
+      res.status(200).json({
+        message: "Không tìm thấy chi nhánh"
+      })
+      return;
     }
 
     if (req.body.password) {

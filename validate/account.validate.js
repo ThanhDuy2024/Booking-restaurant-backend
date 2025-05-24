@@ -19,6 +19,10 @@ export const accountValidateCreateForm = (req, res, next) => {
     avatar: Joi.string().allow(""),
     phone: Joi.string().allow(""),
     address: Joi.string().allow(""),
+    branch: Joi.string().required()
+      .messages({
+        "string.empty": "Chi nhánh không được để trống"
+      }),
     status: Joi.string().required()
       .messages({
         "string.empty": "Trạng thái không được để trống"
@@ -62,6 +66,10 @@ export const accountValidateEditForm = (req, res, next) => {
     status: Joi.string().required()
       .messages({
         "string.empty": "Trạng thái không được để trống"
+      }),
+    branch: req.accountAdmin.role == "admin" ? Joi.string().allow("") : Joi.string().required()
+      .messages({
+        "string.empty": "Chi nhánh không được để trống"
       }),
     role: Joi.string().required()
       .messages({

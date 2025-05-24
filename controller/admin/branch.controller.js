@@ -134,21 +134,30 @@ export const branchListController = async (req, res) => {
         const account = await AccountAdmin.findOne({
           _id: item.updatedBy,
         })
-        item.updatedByName = account.fullName;
+        if(account) {
+          item.updatedByName = account.fullName
+        } else {
+          item.updatedByName = "Tài khoản đã bị xóa hoặc không tồn tại";
+        }
       }
 
       if(item.createdBy) {
         const account = await AccountAdmin.findOne({
           _id: item.createdBy,
         })
-        item.createdByName = account.fullName;
+        if(account) {
+          item.createdByName = account.fullName;
+        } else {
+          item.createdByName = "Tài khoản đã bị xóa hoặc không tồn tại";
+        }
       }
     }
     res.status(200).json(branch);
 
   } catch (error) {
     res.status(400).json({
-      message: "Lấy dữ liệu không thành công"
+      message: "Lấy dữ liệu không thành công",
+      code: error,
     })
   }
 }

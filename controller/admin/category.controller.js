@@ -33,7 +33,6 @@ export const categoryListController = async (req, res) => {
       })
       if (accountAdmin) {
         item.createdByName = accountAdmin.fullName;
-        delete item.createdBy;
       }
     }
 
@@ -43,7 +42,6 @@ export const categoryListController = async (req, res) => {
       })
       if (accountAdmin) {
         item.updatedByName = accountAdmin.fullName;
-        delete item.updatedBy;
       }
     }
   }

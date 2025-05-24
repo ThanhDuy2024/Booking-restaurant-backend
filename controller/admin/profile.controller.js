@@ -1,4 +1,6 @@
 import AccountAdmin from "../../models/accountAdmin.model.js";
+import { Branch } from "../../models/branch.model.js";
+
 export const profileGetController = async (req, res) => {
   if (req.accountAdmin.role != "admin" && req.accountAdmin.role != "staff") {
     res.status(401).json({
@@ -11,7 +13,16 @@ export const profileGetController = async (req, res) => {
     _id: req.accountAdmin.id,
     deleted: false,
     status: "active"
-  }, { password: 0 });
+  }, { password: 0 }).lean();
+
+  if(account.branch) {
+    const branch = await Branch.findOne({
+      _id: account.branch,
+      deleted: false,
+      status: "active"
+    })
+    account.branchName = branch.name;
+  }
 
 
   res.status(200).json(account);
