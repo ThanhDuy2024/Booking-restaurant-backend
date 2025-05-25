@@ -3,6 +3,7 @@ import { Branch } from "../../models/branch.model.js";
 import moment from "moment";
 import { slugGenerate } from "../../helpers/slugGenerate.js";
 import slugify from "slugify";
+import { paginationHelper } from "../../helpers/paginationHelper.js";
 
 export const branchCreateController = async (req, res) => {
   if (req.accountAdmin.role != "admin") {
@@ -135,9 +136,21 @@ export const branchListController = async (req, res) => {
     }
     //Ket thuc tinh nang tiem kiem
 
+    //Chuc nang phan trang
+    let skip = 0;
+    const limit = 5;
+    const countDocuments = await Branch.countDocuments(find); //Dem ra nhung item co thuoc thuoc tinh trong find
+    const pagesPagination = Math.ceil(countDocuments / limit);
+
+    if (req.query.page) {
+      const pages = paginationHelper(parseInt(req.query.page), pagesPagination, limit, skip);
+      skip = pages.skip;
+    }
+    //Ket thuc chuc nang phan trang
+
     const branch = await Branch.find(find).sort({
       createdAt: "desc"
-    }).lean();
+    }).limit(limit).skip(skip).lean();
 
     if (branch.length == 0) {
       res.status(404).json({
@@ -177,7 +190,10 @@ export const branchListController = async (req, res) => {
         }
       }
     }
-    res.status(200).json(branch);
+    res.status(200).json({
+      branchList: branch,
+      pages: pagesPagination
+    });
 
   } catch (error) {
     res.status(400).json({

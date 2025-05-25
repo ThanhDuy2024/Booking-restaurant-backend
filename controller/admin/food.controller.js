@@ -4,6 +4,7 @@ import AccountAdmin from "../../models/accountAdmin.model.js";
 import moment from "moment";
 import slugify from "slugify";
 import { slugGenerate } from "../../helpers/slugGenerate.js";
+import { paginationHelper } from "../../helpers/paginationHelper.js";
 
 export const foodListController = async (req, res) => {
 	if (req.accountAdmin.role != "admin") {
@@ -27,9 +28,21 @@ export const foodListController = async (req, res) => {
 	}
 	//Ket thuc tinh nang tiem kiem
 
+	//Chuc nang phan trang
+  let skip = 0;
+  const limit = 5;
+  const countDocuments = await Food.countDocuments(find);
+	const pagesPagination = Math.ceil(countDocuments / limit);
+
+  if (req.query.page) {
+    const pages = paginationHelper(parseInt(req.query.page), pagesPagination, limit, skip);
+    skip = pages.skip;
+  }
+  //Ket thuc chuc nang phan trang
+
 	const food = await Food.find(find).sort({
 		position: "desc"
-	}).limit(6).lean();
+	}).limit(limit).skip(skip).lean();
 
 	if (food.length == 0) {
     res.status(404).json({
@@ -79,7 +92,10 @@ export const foodListController = async (req, res) => {
 		}
 	}
 
-	res.status(200).json(food);
+	res.status(200).json({
+		foodList: food,
+		pages: pagesPagination
+	});
 }
 
 export const foodCreateController = async (req, res) => {

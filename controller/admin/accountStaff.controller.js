@@ -3,6 +3,7 @@ import { Branch } from "../../models/branch.model.js";
 import bcrypt from "bcryptjs";
 import moment from "moment";
 import { slugGenerate } from "../../helpers/slugGenerate.js";
+import { paginationHelper } from "../../helpers/paginationHelper.js";
 import slugify from "slugify";
 export const accountStaffListController = async (req, res) => {
   if (req.accountAdmin.role != "admin") {
@@ -28,9 +29,21 @@ export const accountStaffListController = async (req, res) => {
   }
   //Ket thuc tinh nang tiem kiem
 
+    //Chuc nang phan trang
+    let skip = 0;
+    const limit = 5;
+    const countDocuments = await AccountAdmin.countDocuments(find);
+    const pagesPagination = Math.ceil(countDocuments / limit);
+  
+    if (req.query.page) {
+      const pages = paginationHelper(parseInt(req.query.page), pagesPagination, limit, skip);
+      skip = pages.skip;
+    }
+    //Ket thuc chuc nang phan trang
+
   const accountAdmin = await AccountAdmin.find(find, { password: 0 }).sort({
     createdAt: "desc"
-  }).lean();
+  }).limit(limit).skip(skip).lean();
 
   if (accountAdmin.length == 0) {
     res.status(404).json({
@@ -78,7 +91,10 @@ export const accountStaffListController = async (req, res) => {
     }
   }
 
-  res.status(200).json(accountAdmin);
+  res.status(200).json({
+    accountList: accountAdmin,
+    pages: pagesPagination
+  });
 }
 
 export const accountStaffCreateController = async (req, res) => {

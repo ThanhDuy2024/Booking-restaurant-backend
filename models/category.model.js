@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
-import slug from "mongoose-slug-generator";
+import slug from "mongoose-slug-updater";
 mongoose.plugin(slug)
-
 const { Schema } = mongoose;
 
 const schema = new Schema({
@@ -13,16 +12,16 @@ const schema = new Schema({
     type: Boolean,
     default: false
   },
+  slug: {
+    type: String,
+    slug: "name",
+    unique: true
+  },
   deletedAt: Date,
   deletedBy: String,
   updatedBy: String,
   createdBy: String,
-  slug: {
-      type: String,
-      slug: "name",
-      unique: true
-    }
-},{ timestamps: true }
+}, { timestamps: true }
 )
 
 const Category = mongoose.model("Category", schema, "categories");

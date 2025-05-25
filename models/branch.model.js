@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import slug from "mongoose-slug-generator";
+import slug from "mongoose-slug-updater";
 const { Schema } = mongoose;
 mongoose.plugin(slug);
 
@@ -12,7 +12,8 @@ const schema = new Schema({
   status: String,
   slug: {
     type: String,
-    slug: "name"
+    slug: "name",
+    unique: true,
   },
   deleted: {
     type: Boolean,
