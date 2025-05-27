@@ -41,8 +41,8 @@ export const bookingController = async (req, res) => {
     <p style="font-size: 16px;">Dưới đây là thông tin đặt bàn của bạn:</p>
     
     <ul style="font-size: 16px; line-height: 1.6;">
-      <li><strong>Ngày:</strong> ${req.body.arriveDay}</li>
-      <li><strong>Giờ:</strong> ${req.body.timeToArrive}</li>
+      <li><strong>Ngày hẹn:</strong> ${req.body.arriveDay}</li>
+      <li><strong>Giờ hẹn:</strong> ${req.body.timeToArrive}</li>
       <li><strong>Số lượng khách:</strong> ${req.body.totalPerson}</li>
       <li><strong>Yêu cầu đặc biệt:</strong> ${req.body.note || "Không có"}</li>
     </ul>
