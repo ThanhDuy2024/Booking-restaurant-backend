@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import { databaseConnect } from "./config/database.js";
 import adminRouter from "./router/admin/index.route.js";
+import clientRouter from "./router/client/index.route.js";
 
 const app = express();
 const port = process.env.PORT;
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/api/admin", adminRouter);
+app.use("/api/client", clientRouter);
 
 
 app.listen(port, () => {
