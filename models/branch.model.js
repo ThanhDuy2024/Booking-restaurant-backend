@@ -10,6 +10,7 @@ const schema = new Schema({
   phone: String,
   avatar: String,
   status: String,
+  totalTable: Number,
   slug: {
     type: String,
     slug: "name",

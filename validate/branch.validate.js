@@ -20,6 +20,10 @@ export const branchValidate = (req, res, next) => {
       .messages({
         "string.empty": "Trạng thái không được để trống"
       }),
+    totalTable: Joi.string().required()
+      .messages({
+        "string.empty": "Số lượng bản trong quán không được để trống"
+      })
   })
 
   const { error } = schema.validate(req.body);

@@ -22,7 +22,7 @@ const schema = new Schema(
     deletedBy: String,
     createdBy: String,
     updatedBy: String,
-    branch: String,
+    branch: String, //1
     slug: {
       type: String,
       slug: "fullName",
