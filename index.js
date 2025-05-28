@@ -9,10 +9,10 @@ import clientRouter from "./router/client/index.route.js";
 const app = express();
 const port = process.env.PORT;
 
-const corsOptions = {
+app.use(cors({
+  origin: "http://localhost:3000",
   credentials: true,
-}
-app.use(cors(corsOptions));
+}));
 
 //Kết nối cơ sở dữ liệu
 databaseConnect();
