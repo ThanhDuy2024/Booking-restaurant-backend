@@ -11,6 +11,8 @@ const port = process.env.PORT;
 
 app.use(cors({
   origin: "http://localhost:3000",
+  methods: ['GET', 'PUT', 'POST', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
 }));
 
@@ -23,7 +25,6 @@ app.use(cookieParser());
 
 app.use("/api/admin", adminRouter);
 app.use("/api/client", clientRouter);
-
 
 app.listen(port, () => {
   console.log(`App listening on port ${port}`);
