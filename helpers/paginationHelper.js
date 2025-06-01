@@ -1,4 +1,4 @@
-export const paginationHelper = (requestPage, pages, limit, skip) => {
+export const paginationHelper = (requestPage, pages, limit = 5, skip = 0) => {
   let page = 1;
 
   if(requestPage < 1) {

@@ -12,15 +12,21 @@ const schema = new Schema({
   totalPerson: Number,
   timeAll: Date,
   note: String,
+  status: String,
   deleted: {
     type: Boolean,
     default: false
+  },
+  slug: {
+    type: String,
+    slug: "fullName",
+    unique: true,
   },
   deletedAt: Date,
   deletedBy: String,
   updatedBy: String,
 }, {
-  timeseries: true
+  timestamps: true
 })
 
 export const Booking = mongoose.model("Booking", schema, "booking");

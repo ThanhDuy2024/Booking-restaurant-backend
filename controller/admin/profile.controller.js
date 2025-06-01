@@ -62,7 +62,7 @@ export const profileEditController = async (req, res) => {
     req.body.updatedBy = req.accountAdmin.id;
     
     if(req.accountAdmin.fullName != req.body.fullName) {
-      req.body.slug = await slugGenerate(AccountAdmin, req.body.name);
+      req.body.slug = await slugGenerate(AccountAdmin, req.body.fullName);
     }
 
     await AccountAdmin.updateOne({
@@ -73,6 +73,7 @@ export const profileEditController = async (req, res) => {
       message: "Chỉnh sửa thông tin cá nhân thành công"
     })
   } catch (error) {
+    console.log(error)
     res.status(400).json({
       message: "Chỉnh sửa thông tin cá nhân thất bại"
     })

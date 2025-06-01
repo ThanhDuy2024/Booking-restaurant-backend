@@ -31,6 +31,7 @@ export const bookingValidate = (req, res, next) => {
         "string.empty": "Thời gian đến không được để trống"
       }),
     note: Joi.string().allow(""),
+    status: Joi.string().allow(""),
   })
 
   const { error } = schema.validate(req.body);
