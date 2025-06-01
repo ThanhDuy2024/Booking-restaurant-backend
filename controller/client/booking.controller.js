@@ -1,6 +1,7 @@
 import { Booking } from "../../models/booking.model.js";
 import { Branch } from "../../models/branch.model.js";
 import { nodemailerHelper } from "../../helpers/nodemailer.helper.js";
+import moment from "moment";
 export const bookingController = async (req, res) => {
   try {
     const branchId = req.body.branchId;
@@ -17,12 +18,24 @@ export const bookingController = async (req, res) => {
     }
 
     req.body.totalPerson = parseInt(req.body.totalPerson);
-    const [day, month, year] = req.body.arriveDay.split("/");
+    const [year, month, day] = req.body.arriveDay.split("-");
     const [hours, minutes] = req.body.timeToArrive.split(":");
+
+    //check ngay thang
+    const dateNow = Date.now();
+    const currentDate = moment(dateNow).format("YYYY-MM-DD");
+    const [currentYear, currentMonth, currentDay] = currentDate.split("-");
+
+    if(parseInt(day) < parseInt(currentDay) || parseInt(month) < parseInt(currentMonth) || parseInt(year) < parseInt(currentYear)) {
+      res.status(400).json({
+        message: "Ngày tháng năm đặt bàn, phải lớn hơn hoặc bằng ngày tháng năm hiện tại"
+      })
+      return;
+    }
+    
+    //format ngay thang giong du lieu mongodb
     const newDateFormat = new Date(year, month - 1, day, hours, minutes); //thang bat dau tu 0 nen phai tru di 1
-
     req.body.timeAll = newDateFormat;
-
 
 
     const newBooking = new Booking(req.body);
