@@ -13,7 +13,7 @@ app.use(cors({
   origin: "http://localhost:3000",
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  credentials: true, //cho phep gui cookie
 }));
 
 //Kết nối cơ sở dữ liệu
