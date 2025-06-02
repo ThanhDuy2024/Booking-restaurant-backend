@@ -4,9 +4,9 @@ import { Booking } from "../../models/booking.model.js";
 import { paginationHelper } from "../../helpers/paginationHelper.js";
 
 export const bookingControllerList = async (req, res) => {
-  if (req.accountAdmin.role != "staff") {
+  if(req.accountAdmin.role != "staff") {
     res.status(401).json({
-      message: "Bạn không có quyền truy cập nội dung này"
+      message: "Vui lòng đăng nhập vào tài khoảng staff để xem"
     })
     return;
   }
@@ -64,4 +64,38 @@ export const bookingControllerList = async (req, res) => {
     data: record,
     pages: pagination.pages,
   })
+}
+
+export const bookingControllerDetail = async (req, res) => {
+  if(req.accountAdmin.role != "staff") {
+    res.status(401).json({
+      message: "Vui lòng đăng nhập vào tài khoảng staff để xem"
+    })
+    return;
+  }
+  try {
+    const id = req.params.id;
+    const branchId = req.accountAdmin.branch;
+
+    const record = await Booking.findOne({
+      _id: id,
+      branchId: branchId,
+      deleted: false
+    }).lean();
+
+    if(!record) {
+      res.status(404).json({
+        message: "Không tìm thấy thông tin khách hàng"
+      })
+      return;
+    }
+
+    record.timeAll = moment(record.timeAll).format("HH:mm - DD/MM/YYYY");
+
+    res.status(200).json(record)
+  } catch (error) {
+    res.status(404).json({
+      message: "Không tìm thấy thông tin"
+    })
+  }
 }
