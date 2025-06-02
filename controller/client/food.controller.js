@@ -36,7 +36,14 @@ export const foodControllerList = async (req, res) => {
 
   const record = await Food.find(find).sort({
     position: "desc"
-  }).limit(limit).skip(pagination.skip);
+  }).limit(limit).skip(pagination.skip).lean();
+
+
+  for (const item of record) {
+    if(item.price) {
+      item.priceFormat = item.price.toLocaleString("vi-VN");
+    }
+  }
 
   res.status(200).json({
     data: record,
