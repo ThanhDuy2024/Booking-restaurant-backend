@@ -4,7 +4,7 @@ import { Booking } from "../../models/booking.model.js";
 import { paginationHelper } from "../../helpers/paginationHelper.js";
 
 export const bookingControllerList = async (req, res) => {
-  if(req.accountAdmin.role != "staff") {
+  if (req.accountAdmin.role != "staff") {
     res.status(401).json({
       message: "Vui lòng đăng nhập vào tài khoảng staff để xem"
     })
@@ -47,7 +47,7 @@ export const bookingControllerList = async (req, res) => {
     createdAt: "desc"
   }).limit(limit).skip(pagination.skip).lean();
 
-  if(record.length < 1) {
+  if (record.length < 1) {
     res.status(404).json({
       message: "Không tìm thấy thông tin khách hàng"
     })
@@ -67,7 +67,7 @@ export const bookingControllerList = async (req, res) => {
 }
 
 export const bookingControllerDetail = async (req, res) => {
-  if(req.accountAdmin.role != "staff") {
+  if (req.accountAdmin.role != "staff") {
     res.status(401).json({
       message: "Vui lòng đăng nhập vào tài khoảng staff để xem"
     })
@@ -83,7 +83,7 @@ export const bookingControllerDetail = async (req, res) => {
       deleted: false
     }).lean();
 
-    if(!record) {
+    if (!record) {
       res.status(404).json({
         message: "Không tìm thấy thông tin khách hàng"
       })
@@ -96,6 +96,44 @@ export const bookingControllerDetail = async (req, res) => {
   } catch (error) {
     res.status(404).json({
       message: "Không tìm thấy thông tin"
+    })
+  }
+}
+
+export const bookingControllerDelete = async (req, res) => {
+  if (req.accountAdmin.role != "staff") {
+    res.status(401).json({
+      message: "Vui lòng đăng nhập vào tài khoảng staff để xem"
+    })
+    return;
+  }
+  try {
+    const id = req.params.id;
+    const record = await Booking.findOne({
+      _id: id,
+      deleted: false,
+    });
+
+    if (!record) {
+      res.status(404).json({
+        message: "Xóa đơn đặt lịch không thành công"
+      })
+    }
+
+    await Booking.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deletedAt: Date.now(),
+      deletedBy: req.accountAdmin.id
+    });
+    
+    res.status(200).json({
+      message: "Xóa đơn đặt lịch thành công"
+    })
+  } catch (error) {
+    res.status(400).json({
+      message: "Xóa đơn đặt lịch không thành công"
     })
   }
 }
