@@ -72,7 +72,7 @@ export const registerController = async (req, res) => {
     code: "success",
     data: {
       fullName,
-      email
+      email,
     }
   })
 }
