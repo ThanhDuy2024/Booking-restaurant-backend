@@ -83,8 +83,6 @@ export const branchEditController = async (req, res) => {
       }
     }
 
-
-
     if (req.file) {
       req.body.avatar = req.file.path;
     } else {

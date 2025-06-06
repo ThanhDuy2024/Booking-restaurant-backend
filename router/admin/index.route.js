@@ -7,6 +7,7 @@ import profileRouter from "./profile.route.js";
 import branchRouter from "./branch.route.js";
 import settingRouter from "./setting.route.js";
 import bookingRouter from "./booking.route.js";
+import orderRouter from "./order.route.js";
 import { authentication  } from "../../middleware/auth.middleware.js";
 const router = express.Router();
 
@@ -25,4 +26,6 @@ router.use('/branch', authentication, branchRouter);
 router.use('/setting', authentication, settingRouter);
 
 router.use('/booking', authentication, bookingRouter);
+
+router.use('/order', authentication, orderRouter);
 export default router;

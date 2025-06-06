@@ -4,12 +4,16 @@ const { Schema } = mongoose;
 
 const schema = new Schema({
   branchId: String,
-  foodsId: Array,
+  foods: Array,
+  totalOrigin: Number,
   totalPrice: Number,
-  discount: Number,
+  discount: String,
   tableNumber: Number,
   status: String,
-  deleted: Boolean,
+  deleted: {
+    type: Boolean,
+    default: false
+  },
   deletedAt: Date,
   deletedBy: String,
   createdBy: String,
