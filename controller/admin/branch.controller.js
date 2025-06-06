@@ -28,7 +28,7 @@ export const branchCreateController = async (req, res) => {
     if (req.file) {
       req.body.avatar = req.file.path;
     } else {
-      delete req.body.avatar;
+      delete req.body.avatar
     }
 
     req.body.createdBy = req.accountAdmin.id;
@@ -88,7 +88,7 @@ export const branchEditController = async (req, res) => {
     if (req.file) {
       req.body.avatar = req.file.path;
     } else {
-      delete req.body.avatar;
+      req.body.avatar = "";
     }
 
     req.body.updatedBy = req.accountAdmin.id;
