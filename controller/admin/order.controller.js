@@ -133,7 +133,17 @@ export const orderControllerList = async (req, res) => {
     }
     //Sap xep theo gia hoa don
     if (req.query.priceSort) {
-      sortMethod.totalPrice = req.query.priceSort;
+      switch (req.query.priceSort) {
+        case "inital":
+          sortMethod.totalPrice = req.query.priceSort;
+          break;
+        case "cancel":
+          sortMethod.totalPrice = req.query.priceSort;
+        case "completed":
+          sortMethod.totalPrice = req.query.priceSort;
+        default:
+          break;
+      }
     }
     //end sap xep theo gia hoa don
 
@@ -182,6 +192,12 @@ export const orderControllerList = async (req, res) => {
         if (account) {
           item.updatedByName = account.fullName
         }
+      }
+      if(item.totalOrigin) {
+        item.totalOriginVND = item.totalOrigin.toLocaleString("vi-VN");
+      }
+      if(item.totalPrice) {
+        item.totalPriceVND = item.totalPrice.toLocaleString("vi-VN");
       }
     }
 
