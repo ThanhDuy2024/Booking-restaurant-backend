@@ -71,7 +71,7 @@ export const orderControllerCreate = async (req, res) => {
     req.body.totalOrigin = food.reduce((sum, item) => {
       return sum + (item.price * item.quantity);
     }, 0);
-
+    req.body.discount = req.body.discount ? req.body.discount : "0"
     req.body.totalPrice = req.body.totalOrigin * (1 - (parseFloat(req.body.discount) / 100))
     req.body.foods = food
     req.body.branchId = req.accountAdmin.branch
