@@ -91,9 +91,9 @@ export const orderControllerCreate = async (req, res) => {
 
     console.log(req.body);
 
-    // const newRecord = new Order(req.body);
+    const newRecord = new Order(req.body);
 
-    // await newRecord.save();
+    await newRecord.save();
 
     res.status(200).json({
       message: "Tạo thành công"
