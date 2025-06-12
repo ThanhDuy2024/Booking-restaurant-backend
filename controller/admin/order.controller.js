@@ -62,27 +62,38 @@ export const orderControllerCreate = async (req, res) => {
       status: "active"
     }).lean();
 
+    const finalData = [];
     for (const item of food) {
       const foodItem = req.body.foodObject.find(items => items.foodId == item._id)
       item.quantity = parseInt(foodItem.quantity);
-
+      const priceFormat = item.price.toLocaleString("vi-VN");
+      finalData.push({
+        id: item._id,
+        name: item.name,
+        price: item.price,
+        priceFormat: priceFormat,
+        avatar: item.avatar ? item.avatar : "",
+        quantity: item.quantity
+      })
     }
 
     req.body.totalOrigin = food.reduce((sum, item) => {
       return sum + (item.price * item.quantity);
     }, 0);
-    req.body.discount = req.body.discount ? req.body.discount : "0"
+    req.body.discount = req.body.discount ? req.body.discount : 0;
     req.body.totalPrice = req.body.totalOrigin * (1 - (parseFloat(req.body.discount) / 100))
-    req.body.foods = food
+    req.body.foods = finalData
     req.body.branchId = req.accountAdmin.branch
     delete req.body.foodObject
 
     req.body.createdBy = req.accountAdmin.id;
     req.body.updatedBy = req.accountAdmin.id;
 
-    const newRecord = new Order(req.body);
+    console.log(req.body);
 
-    await newRecord.save();
+    // const newRecord = new Order(req.body);
+
+    // await newRecord.save();
 
     res.status(200).json({
       message: "Tạo thành công"
@@ -148,7 +159,7 @@ export const orderControllerList = async (req, res) => {
     //end sap xep theo gia hoa don
 
     //Tinh nang loc hoa don theo trang thai
-    if(req.query.status) {
+    if (req.query.status) {
       const status = req.query.status;
       find.status = status;
     }
@@ -193,10 +204,10 @@ export const orderControllerList = async (req, res) => {
           item.updatedByName = account.fullName
         }
       }
-      if(item.totalOrigin) {
+      if (item.totalOrigin) {
         item.totalOriginVND = item.totalOrigin.toLocaleString("vi-VN");
       }
-      if(item.totalPrice) {
+      if (item.totalPrice) {
         item.totalPriceVND = item.totalPrice.toLocaleString("vi-VN");
       }
     }
@@ -209,6 +220,84 @@ export const orderControllerList = async (req, res) => {
     console.log(error);
     res.status.json({
       message: "Lấy danh sách thất bại"
+    })
+  }
+}
+
+export const orderControllerEdit = async (req, res) => {
+  //tableNumber,
+  //foodObject: id and quantity
+  //discount
+  //status
+
+  //output
+  //id
+  //ten
+  //anh
+  //so luong
+  try {
+    const record = await Order.findOne({
+      _id: req.params.id,
+      branchId: req.accountAdmin.branch,
+      deleted: false
+    })
+
+    if (!record) {
+      res.status(404).json({
+        message: "Không tìm ra được hóa đơn trong chi nhánh của bạn"
+      })
+      return;
+    }
+
+    let idFoodObject = [];
+    const arrayObjectFood = req.body.foodObject
+    for (const item of arrayObjectFood) {
+      idFoodObject.push(item.foodId)
+    }
+
+    const food = await Food.find({
+      _id: { $in: idFoodObject },
+      status: "active",
+      deleted: false
+    }).lean();
+
+    const finalData = [];
+    for (const foodItem of food) {
+      const quantity = arrayObjectFood.find(items => items.foodId == foodItem._id);
+      foodItem.quantity = parseInt(quantity.quantity);
+      const priceFormat = foodItem.price.toLocaleString("vi-VN");
+      finalData.push({
+        id: foodItem._id,
+        name: foodItem.name,
+        price: foodItem.price,
+        priceFormat: priceFormat,
+        avatar: foodItem.avatar ? foodItem.avatar : "",
+        quantity: foodItem.quantity
+      })
+    }
+    req.body.foods = finalData;
+    req.body.discount = req.body.discount ? req.body.discount : 0;
+    req.body.totalOrigin = finalData.reduce((sum, item) => {
+      return sum + (item.price * item.quantity);
+    }, 0)
+    req.body.totalOriginVND = req.body.totalOrigin.toLocaleString("vi-VN");
+    req.body.totalPrice = req.body.totalOrigin * (1 - (parseFloat(req.body.discount) / 100));
+    req.body.totalPriceVND = req.body.totalPrice.toLocaleString("vi-VN");
+
+    delete req.body.foodObject;
+
+    await Order.updateOne({
+      _id: req.params.id
+    }, req.body);
+
+    console.log(req.body);
+    res.status(200).json({
+      message: "Chỉnh sửa thành công"
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({
+      message: "Chỉnh sửa không thành công"
     })
   }
 }

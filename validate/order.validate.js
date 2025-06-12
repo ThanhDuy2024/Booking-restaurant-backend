@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const orderCreateValidate = (req, res, next) => {
+export const orderValidate = (req, res, next) => {
   const foodSchema = Joi.object({
   foodId: Joi.string()
     .length(24)
