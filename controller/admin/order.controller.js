@@ -41,7 +41,8 @@ export const orderControllerCreate = async (req, res) => {
     const checkTable = await Order.findOne({
       branchId: req.accountAdmin.branch,
       tableNumber: parseInt(req.body.tableNumber),
-      status: "inital"
+      status: "inital",
+      deleted: false
     })
 
     if (checkTable) {
@@ -225,16 +226,6 @@ export const orderControllerList = async (req, res) => {
 }
 
 export const orderControllerEdit = async (req, res) => {
-  //tableNumber,
-  //foodObject: id and quantity
-  //discount
-  //status
-
-  //output
-  //id
-  //ten
-  //anh
-  //so luong
   try {
     const record = await Order.findOne({
       _id: req.params.id,
@@ -290,7 +281,6 @@ export const orderControllerEdit = async (req, res) => {
       _id: req.params.id
     }, req.body);
 
-    console.log(req.body);
     res.status(200).json({
       message: "Chỉnh sửa thành công"
     })
@@ -298,6 +288,38 @@ export const orderControllerEdit = async (req, res) => {
     console.log(error);
     res.status(400).json({
       message: "Chỉnh sửa không thành công"
+    })
+  }
+}
+
+export const orderControllerDelete = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const record = await Order.findOne({
+      _id: id,
+      branchId: req.accountAdmin.branch,
+    })
+
+    if(!record) {
+      res.status(404).json({
+        message: "Không tìm thấy sản phẩm trong nhánh của bạn"
+      })
+      return;
+    }
+
+    await Order.updateOne({
+      _id: record.id
+    }, {
+      deleted: true,
+    })
+    res.status(200).json({
+      message: "Xóa thành công"
+    })
+  } catch (error) {
+    console.log(error);
+    res.status(200).json({
+      message: "Xóa không thành công"
     })
   }
 }

@@ -9,4 +9,5 @@ router.get('/list', orderController.orderControllerList);
 
 router.patch('/edit/:id', orderValidate.orderValidate, orderController.orderControllerEdit);
 
+router.delete('/delete/:id', orderController.orderControllerDelete);
 export default router;
