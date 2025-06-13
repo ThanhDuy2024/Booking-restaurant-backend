@@ -1,6 +1,6 @@
 import Order from "../../models/order.model.js";
 
-export const revenueAllBranch = async (req, res) => {
+export const revenueDay = async (req, res) => {
   const timeLine = new Date();
 
   const currentMonth = timeLine.getMonth() + 1; //Lay ra thang
@@ -20,5 +20,22 @@ export const revenueAllBranch = async (req, res) => {
 
   res.status(200).json({
     data: arrayTotalPriceDayInMonth
+  })
+}
+
+export const revenueMonth = async (req, res) => {
+  let arrayTotalPriceMonthInYear = Array(12).fill(0);
+
+  const record = await Order.find({
+    deleted: false,
+    status: "completed"
+  });
+
+  for (const item of record) {
+    const month = item.createdAt.getMonth(); // Trả về số ngày (1 -> 31)
+    arrayTotalPriceMonthInYear[month] += item.totalPrice;
+  }
+  res.status(200).json({
+    data: arrayTotalPriceMonthInYear,
   })
 }
