@@ -10,4 +10,9 @@ router.get("/month", revenueController.revenueMonth);
 router.get("/years", revenueController.revenueYears);
 
 router.get("/branch/day", revenueController.revenueBranchDay);
+
+router.get("/branch/month", revenueController.revenueBranchMonth);
+
+router.get("/branch/years", revenueController.revenueBranchYears);
+
 export default router
