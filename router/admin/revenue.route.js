@@ -7,4 +7,5 @@ router.get("/day", revenueController.revenueDay);
 
 router.get("/month", revenueController.revenueMonth);
 
+router.get("/years", revenueController.revenueYears);
 export default router
