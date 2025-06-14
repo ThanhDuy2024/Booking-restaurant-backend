@@ -9,6 +9,7 @@ import settingRouter from "./setting.route.js";
 import bookingRouter from "./booking.route.js";
 import orderRouter from "./order.route.js";
 import revenueRouter from "./revenue.route.js"
+import dashboardRouter from "./dashboarch.route.js"
 import { authentication  } from "../../middleware/auth.middleware.js";
 const router = express.Router();
 
@@ -31,4 +32,6 @@ router.use('/booking', authentication, bookingRouter);
 router.use('/order', authentication, orderRouter);
 
 router.use('/revenue', authentication, revenueRouter);
+
+router.use('/dashboard', authentication, dashboardRouter);
 export default router;
