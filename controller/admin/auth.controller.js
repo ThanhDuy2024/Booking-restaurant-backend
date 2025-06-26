@@ -39,7 +39,7 @@ export const loginController = async (req, res) => {
     httpOnly: true,
     maxAge: 30 * 24 * 60 * 60 * 1000,
     secure: process.env.ENVIRONMENT_SECURE == "production" ? true : false, //false: http, true: https
-    sameSite: "lax" //cho phep gui cookie giua cac domain
+    sameSite: "none" //cho phep gui cookie giua cac domain
   });
   
   res.status(200).json({
