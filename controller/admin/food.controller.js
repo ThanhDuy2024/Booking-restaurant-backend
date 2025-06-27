@@ -42,7 +42,7 @@ export const foodListController = async (req, res) => {
 
 	const food = await Food.find(find).sort({
 		position: "desc"
-	}).limit(limit).skip(skip).lean();
+	})
 
 	if (food.length == 0) {
     res.status(404).json({
