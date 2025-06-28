@@ -86,7 +86,7 @@ export const branchEditController = async (req, res) => {
     if (req.file) {
       req.body.avatar = req.file.path;
     } else {
-      req.body.avatar = "";
+      delete req.body.avatar;
     }
 
     req.body.updatedBy = req.accountAdmin.id;
