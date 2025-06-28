@@ -21,6 +21,12 @@ export const profileGetController = async (req, res) => {
       deleted: false,
       status: "active"
     })
+    if(!branch) {
+      res.status(404).json({
+        message: "Thông tin chi nhánh của bạn không tồn tại trong hệ thống, vui lòng nhờ quản trị viên để sửa lại"
+      })
+      return;
+    }
     account.branchName = branch.name;
   }
 
