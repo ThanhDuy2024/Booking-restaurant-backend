@@ -41,7 +41,7 @@ export const bookingController = async (req, res) => {
     const newBooking = new Booking(req.body);
     await newBooking.save();
 
-    const subject = '[Nhà hàng Susano] - Xin được xác nhận đơn hàng';
+    const subject = '[Nhà hàng Darion] - Xin được xác nhận đơn hàng';
     const htm = `
   <div style="font-family: Arial, sans-serif; color: #333;">
     <p style="font-size: 16px;">Xin chào quý khách <b style="color: #d2691e;">${req.body.fullName}</b>,</p>
