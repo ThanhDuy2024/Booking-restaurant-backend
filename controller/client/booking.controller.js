@@ -55,6 +55,7 @@ export const bookingController = async (req, res) => {
     
     <ul style="font-size: 16px; line-height: 1.6;">
       <li><strong>Ngày hẹn:</strong> ${req.body.arriveDay}</li>
+      <li><strong>Tại chi nhánh:</strong> ${branchCheck.name}</li>
       <li><strong>Giờ hẹn:</strong> ${req.body.timeToArrive}</li>
       <li><strong>Số lượng khách:</strong> ${req.body.totalPerson}</li>
       <li><strong>Yêu cầu đặc biệt:</strong> ${req.body.note || "Không có"}</li>
@@ -66,7 +67,7 @@ export const bookingController = async (req, res) => {
     
     <p style="font-size: 16px; margin-top: 20px;">Trân trọng,</p>
     <p style="font-size: 16px; font-weight: bold; color: #d2691e;">Nhà hàng Susano</p>
-    <p style="font-size: 14px; color: #555;">Hotline: ${branchCheck.phone}</p>
+    <p style="font-size: 14px; color: #555;">Số điện thoại chi nhánh - ${branchCheck.name}: ${branchCheck.phone}</p>
   </div>
 `;
 
