@@ -19,20 +19,16 @@ export const bookingController = async (req, res) => {
 
     req.body.totalPerson = parseInt(req.body.totalPerson);
     const [year, month, day] = req.body.arriveDay.split("-");
-    const [hours, minutes] = req.body.timeToArrive.split(":");
 
-    //check ngay thang
-    const dateNow = Date.now();
-    const currentDate = moment(dateNow).format("YYYY-MM-DD");
-    const [currentYear, currentMonth, currentDay] = currentDate.split("-");
+    const currentDate = moment().startOf("day");
 
-    if(parseInt(day) < parseInt(currentDay) || parseInt(month) < parseInt(currentMonth) || parseInt(year) < parseInt(currentYear)) {
+    if (req.body.arriveDay.isBefore(currentDate)) {
       res.status(400).json({
-        message: "Ngày tháng năm đặt bàn, phải lớn hơn hoặc bằng ngày tháng năm hiện tại"
-      })
+        message: "Ngày tháng năm đặt bàn phải lớn hơn hoặc bằng ngày hiện tại"
+      });
       return;
     }
-    
+
     //format ngay thang giong du lieu mongodb
     const newDateFormat = new Date(year, month - 1, day, hours, minutes); //thang bat dau tu 0 nen phai tru di 1
     req.body.timeAll = newDateFormat;
