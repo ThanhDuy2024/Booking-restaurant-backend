@@ -19,10 +19,12 @@ export const bookingController = async (req, res) => {
 
     req.body.totalPerson = parseInt(req.body.totalPerson);
     const [year, month, day] = req.body.arriveDay.split("-");
-
+    const [hours, minutes] = req.body.timeToArrive.split(":");
+    const arriveDay = moment(req.body.arriveDay, "YYYY-MM-DD", true);
+    console.log(arriveDay);
     const currentDate = moment().startOf("day");
 
-    if (req.body.arriveDay.isBefore(currentDate)) {
+    if (arriveDay.isBefore(currentDate)) {
       res.status(400).json({
         message: "Ngày tháng năm đặt bàn phải lớn hơn hoặc bằng ngày hiện tại"
       });

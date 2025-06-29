@@ -90,8 +90,6 @@ export const orderControllerCreate = async (req, res) => {
     req.body.createdBy = req.accountAdmin.id;
     req.body.updatedBy = req.accountAdmin.id;
 
-    console.log(req.body);
-
     const newRecord = new Order(req.body);
 
     await newRecord.save();

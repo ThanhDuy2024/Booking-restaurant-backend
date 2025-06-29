@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors({
-  origin: process.env.ORIGIN,
+  origin: "http://localhost:3000",
   methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true, //cho phep gui cookie
