@@ -24,7 +24,7 @@ export const loginController = async (req, res) => {
     return;
   }
 
-  const { fullName, email, role} = accountAdmin;
+  const { fullName, email, role } = accountAdmin;
 
   const authToken = jwt.sign({
     fullName,
@@ -41,7 +41,7 @@ export const loginController = async (req, res) => {
     secure: true,
     sameSite: "none" //cho phep gui cookie giua cac domain
   });
-  
+
   res.status(200).json({
     message: "Đăng nhập thành công",
     role: role
@@ -79,7 +79,12 @@ export const registerController = async (req, res) => {
 
 export const logoutController = (req, res) => {
 
-  res.clearCookie("authToken");
+  res.clearCookie("authToken", {
+    httpOnly: true,
+    maxAge: 30 * 24 * 60 * 60 * 1000,
+    secure: true,
+    sameSite: "none" //cho phep gui cookie giua cac domain
+  });
   res.status(200).json({
     message: "Đăng xuất thành công",
   })
