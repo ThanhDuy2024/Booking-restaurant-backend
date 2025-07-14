@@ -7,10 +7,9 @@ export const revenueDay = async (req, res) => {
   const currentYears = timeLine.getFullYear(); //Lay ra nam
   const days = new Date(currentYears, currentMonth, 0).getDate();
   let arrayTotalPriceDayInMonth = Array(days).fill(0);
-
   const record = await Order.find({
     deleted: false,
-    status: "completed"
+    status: "complete"
   });
 
   for (const item of record) {
@@ -33,7 +32,7 @@ export const revenueMonth = async (req, res) => {
 
   const record = await Order.find({
     deleted: false,
-    status: "completed"
+    status: "complete"
   });
 
   for (const item of record) {
@@ -51,7 +50,7 @@ export const revenueMonth = async (req, res) => {
 export const revenueYears = async (req, res) => {
   const record = await Order.find({
     deleted: false,
-    status: "completed"
+    status: "complete"
   });
 
   let arrayYears = [];
@@ -91,7 +90,7 @@ export const revenueBranchDay = async (req, res) => {
 
   const record = await Order.find({
     deleted: false,
-    status: "completed",
+    status: "complete",
     branchId: req.accountAdmin.branch,
   });
 
@@ -115,12 +114,12 @@ export const revenueBranchMonth = async (req, res) => {
 
   const record = await Order.find({
     deleted: false,
-    status: "completed",
+    status: "complete",
     branchId: req.accountAdmin.branch
   });
 
   for (const item of record) {
-    const month = item.createdAt.getMonth(); // Trả về số ngày (1 -> 31)
+    const month = item.createdAt.getMonth();
     if (item.createdAt.getFullYear() === currentYears) {
       arrayTotalPriceMonthInYear[month] += item.totalPrice;
     }
@@ -133,7 +132,7 @@ export const revenueBranchMonth = async (req, res) => {
 export const revenueBranchYears = async (req, res) => {
   const record = await Order.find({
     deleted: false,
-    status: "completed",
+    status: "complete",
     branchId: req.accountAdmin.branch
   });
 
